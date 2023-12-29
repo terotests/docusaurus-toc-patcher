@@ -1,0 +1,17 @@
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.iml
+*.code-workspace
+.changelog
+.history
+
+node_modules
+.yarn
+
+.eslintcache
+
+lib
+
+.netlify
