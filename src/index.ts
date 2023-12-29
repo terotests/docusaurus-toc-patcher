@@ -28,7 +28,7 @@ const isExport = (child: Node): child is Literal => child.type === 'export';
 const removeTags = (input: string) =>
   input.replace('<', '').replace('/>', '').trim();
 
-export default function plugin({name = 'toc'}: {name?: string}): Transformer {
+module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
   const isTarget = (child: Literal) => {
     let found = false;
     const ast = parse(child.value, parseOptions);

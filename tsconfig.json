@@ -4,47 +4,10 @@
     "target": "ES2020",
     "lib": ["ESNext"],
     "declaration": true,
-    "jsx": "react-native",
-    "importHelpers": true,
+//    "importHelpers": true,
     "noEmitHelpers": true,
     // Will be overridden in client projects
     "module": "NodeNext",
-    // Avoid accidentally using this config to build
-
-    /* Strict Type-Checking Options */
-    "allowUnreachableCode": false,
-    // Too hard to turn on
-    "exactOptionalPropertyTypes": false,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    // `process.env` is usually accessed as property
-    "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedIndexedAccess": true,
-    /* strict family */
-    "strict": true,
-    "alwaysStrict": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
-    "useUnknownInCatchVariables": true,
-    /* Handled by ESLint */
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "importsNotUsedAsValues": "remove",
-
-    /* Module Resolution */
-    "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "allowJs": true,
-    "skipLibCheck": true, // @types/webpack and webpack/types.d.ts are not the same thing
     "noEmit": false,
     "incremental": true,
     "tsBuildInfoFile": "./lib/.tsbuildinfo",
@@ -52,7 +15,7 @@
     "declarationMap": true,
     "rootDir": "src",
     "outDir": "lib",
-    "types": []
+    "types": ["node"]
   },
   "include": ["src"],
   "exclude": ["**/__tests__/**"]

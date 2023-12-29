@@ -1,4 +1,4 @@
-# `@akopyl/docusaurus-mdx-patcher`
+# `@akopyl/docusaurus-toc-patcher`
 
 A remark plugin, that replaces the built-in Docusaurus toc plugin. 
 It generates the table of contents properly, when importing markdown files with headings.
@@ -6,7 +6,7 @@ It generates the table of contents properly, when importing markdown files with 
 ## Installation
 
 ```sh
-yarn add @akopyl/docusaurus-mdx-patcher
+yarn add @akopyl/docusaurus-toc-patcher
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ docs: {
   // ... 
   remarkPlugins: [
     [
-      require('@akopyl/docusaurus-mdx-patcher'),
+      require('@akopyl/docusaurus-toc-patcher'),
       {}
     ],
   ]
