@@ -1,5 +1,7 @@
 # `@akopyl/docusaurus-toc-patcher`
 
+❗️This plugin is for Docusaurus v2.
+
 A remark plugin, that replaces the built-in Docusaurus toc plugin. 
 It generates the table of contents properly, when importing markdown files with headings.
 
