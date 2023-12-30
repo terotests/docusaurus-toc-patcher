@@ -1,6 +1,6 @@
 {
   "name": "@akopyl/docusaurus-toc-patcher",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "A replacement for the ToC remark plugin.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -127,12 +127,14 @@ module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
         if (child.type === 'export') {
           const exportNode = child as Text;
 
-          if (exportNode.value.includes(name)) {
+          // TODO: This will remove extra exports if they are on subsequent lines
+          if (exportNode.value.includes(`export const ${name}`)) {
             exportNode.value = '';
           }
         }
       },
     );
+
     const {children} = root as Parent<Literal>;
     const targetIndex = getOrCreateExistingTargetIndex(children);
 
