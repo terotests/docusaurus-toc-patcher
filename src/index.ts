@@ -1,18 +1,28 @@
-import {parse, type ParserOptions} from '@babel/parser';
-import traverse from '@babel/traverse';
-import stringifyObject from 'stringify-object';
-import toString from 'mdast-util-to-string';
-import visit from 'unist-util-visit';
-import {toValue} from './utils';
+import { parse, type ParserOptions } from "@babel/parser";
+import traverse from "@babel/traverse";
+import stringifyObject from "stringify-object";
+import toString from "mdast-util-to-string";
+import visit from "unist-util-visit";
+import { toValue } from "./utils";
 
-import type {Identifier} from '@babel/types';
-import type {Node, Parent} from 'unist';
-import type {Heading, Literal, Text} from 'mdast';
-import type {Transformer} from 'unified';
+import type { Identifier } from "@babel/types";
+import type { Node, Parent } from "unist";
+import type { Heading, Literal, Text } from "mdast";
+import type { Transformer } from "unified";
+
+const localNames = {
+  idx: 1,
+};
+
+const getNewLocalName = (name: string) => {
+  const localName = `${name}${localNames.idx}`;
+  localNames.idx += 1;
+  return localName;
+};
 
 const parseOptions: ParserOptions = {
-  plugins: ['jsx'],
-  sourceType: 'module',
+  plugins: ["jsx"],
+  sourceType: "module",
 };
 
 type TOCItem = {
@@ -21,14 +31,18 @@ type TOCItem = {
   readonly level: number;
 };
 
-const isImport = (child: Node): child is Literal => child.type === 'import';
+const isImport = (child: Node): child is Literal => child.type === "import";
 const hasImports = (index: number) => index > -1;
-const isExport = (child: Node): child is Literal => child.type === 'export';
+const isExport = (child: Node): child is Literal => child.type === "export";
 
 const removeTags = (input: string) =>
-  input.replace('<', '').replace('/>', '').trim();
+  input.replace("<", "").replace("/>", "").trim();
 
-module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
+module.exports = function plugin({
+  name = "toc",
+}: {
+  name?: string;
+}): Transformer {
   const isTarget = (child: Literal) => {
     let found = false;
     const ast = parse(child.value, parseOptions);
@@ -57,7 +71,7 @@ module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
     if (targetIndex === -1) {
       const target = {
         default: false,
-        type: 'export',
+        type: "export",
         value: `export const ${name} = [];`,
       };
 
@@ -75,9 +89,9 @@ module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
 
     visit(
       root,
-      ['heading', 'jsx', 'import', 'export'],
+      ["heading", "jsx", "import", "export"],
       (child, index, parent) => {
-        if (child.type === 'heading') {
+        if (child.type === "heading") {
           const headingNode = child as Heading;
           const value = toString(headingNode);
 
@@ -93,17 +107,17 @@ module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
           });
         }
 
-        if (child.type === 'import') {
+        if (child.type === "import") {
           const importNode = child as Text;
 
           const markdownExtensionRegex = /\.(?:mdx|md).;?$/;
           const imports = importNode.value
-            .split('\n')
+            .split("\n")
             .filter((statement) => markdownExtensionRegex.test(statement));
           for (let i = 0; i < imports.length; i += 1) {
-            const localName = `${name}${i}`;
+            const localName = getNewLocalName(name);
 
-            const importWords = imports[i]!.split(' ');
+            const importWords = imports[i]!.split(" ");
             const partialPath = importWords[importWords.length - 1];
             const partialName = importWords[1] as string;
             const tocImport = `import {${name} as ${localName}} from ${partialPath}`;
@@ -114,7 +128,7 @@ module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
           }
         }
 
-        if (child.type === 'jsx') {
+        if (child.type === "jsx") {
           const jsxNode = child as Text;
 
           const componentName = removeTags(jsxNode.value);
@@ -124,32 +138,32 @@ module.exports = function plugin({name = 'toc'}: {name?: string}): Transformer {
           }
         }
 
-        if (child.type === 'export') {
+        if (child.type === "export") {
           const exportNode = child as Text;
 
           // TODO: This will remove extra exports if they are on subsequent lines
           if (exportNode.value.includes(`export const ${name}`)) {
-            exportNode.value = '';
+            exportNode.value = "";
           }
         }
-      },
+      }
     );
 
-    const {children} = root as Parent<Literal>;
+    const { children } = root as Parent<Literal>;
     const targetIndex = getOrCreateExistingTargetIndex(children);
 
     if (headings.length) {
-      let headingsArray = '[';
+      let headingsArray = "[";
       for (const heading of headings) {
-        if (typeof heading === 'string') {
+        if (typeof heading === "string") {
           headingsArray = `${headingsArray}\n${heading},`;
         } else {
           headingsArray = `${headingsArray}\n${stringifyObject(heading)},`;
         }
       }
-      headingsArray += ']';
+      headingsArray += "]";
 
       children[targetIndex]!.value = `export const ${name} = ${headingsArray};`;
     }
   };
-}
+};
